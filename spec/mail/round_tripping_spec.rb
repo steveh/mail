@@ -48,4 +48,12 @@ describe "Round Tripping" do
     initial.add_file :filename => "foo.txt", :content => body
     expect(Mail.new(initial.encoded).attachments.first.decoded).to eq body
   end
+
+  it "should round trip utf-8 headers" do
+    initial = Mail.new do
+      to "user@exāmple.com"
+    end
+    parsed_mail = Mail.new(initial.encoded)
+    expect(parsed_mail[:to].value).to eq initial[:to].value
+  end
 end
